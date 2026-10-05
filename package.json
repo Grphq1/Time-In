@@ -19,6 +19,7 @@
     "test:e2e": "vitest --project e2e"
   },
   "dependencies": {
+    "@libsql/client": "^0.18.0",
     "@nuxt/eslint": "1.17.0",
     "@nuxt/test-utils": "4.3.3",
     "@nuxt/ui": "4.11.3",
@@ -41,6 +42,9 @@
     "@tiptap/suggestion": "^3",
     "@tiptap/vue-3": "^3",
     "@vueuse/nuxt": "15.0.0",
+    "drizzle-kit": "^0.31.11",
+    "drizzle-orm": "^0.45.3",
+    "effect": "^4.0.0-rc.118",
     "eslint": "^9.0.0 || ^10.0.0",
     "nuxt": "^4.5.2",
     "tailwindcss": "^4",

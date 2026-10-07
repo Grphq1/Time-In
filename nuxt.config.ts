@@ -6,6 +6,7 @@ export default defineNuxtConfig({
     '@nuxt/test-utils',
     '@nuxthub/core',
     '@vueuse/nuxt',
+    'nuxt-auth-utils',
   ],
   devtools: { enabled: true },
   compatibilityDate: '2025-07-15',

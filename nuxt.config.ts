@@ -17,6 +17,10 @@ export default defineNuxtConfig({
     },
   },
 
+  hub: {
+    db: 'sqlite',
+  },
+
   eslint: {
     config: {
       stylistic: true,

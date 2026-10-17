@@ -1,5 +1,5 @@
-import { runEffect } from '~/server/shared/runtime/http'
-import { handleOAuthLogin } from '~/server/features/auth/application/handle-oauth-login'
+import { runEffect } from '#server/shared/runtime/http'
+import { handleOAuthLogin } from '#server/features/auth/application/handle-oauth-login'
 
 export default defineOAuthGitHubEventHandler({
   config: { emailRequired: true },

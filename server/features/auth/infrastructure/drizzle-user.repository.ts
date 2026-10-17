@@ -4,7 +4,7 @@ import { db, schema } from '@nuxthub/db'
 import { UserNotFoundError } from '../domain/errors'
 import type { User } from '../domain/user'
 import { UserRepository } from '../domain/user.port'
-import { tryDb } from '~/server/shared/runtime/drizzle'
+import { tryDb } from '#server/shared/runtime/drizzle'
 
 export const drizzleUserAdapter = Layer.succeed(UserRepository, {
   save: (user: User) =>

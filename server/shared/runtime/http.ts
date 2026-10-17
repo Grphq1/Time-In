@@ -3,7 +3,7 @@ import type {
   AccountLinkedToAnotherUserError,
   RepositoryError,
   UserNotFoundError,
-} from '~/server/features/auth/domain/errors'
+} from '~~/server/features/auth/domain/errors'
 
 type AppError
   = | AccountLinkedToAnotherUserError

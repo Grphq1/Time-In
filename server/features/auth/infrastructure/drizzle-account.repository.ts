@@ -3,7 +3,7 @@ import { Effect, Layer } from 'effect'
 import { db, schema } from '@nuxthub/db'
 import type { Account } from '../domain/account'
 import { AccountRepository } from '../domain/account.port'
-import { tryDb } from '~/server/shared/runtime/drizzle'
+import { tryDb } from '#server/shared/runtime/drizzle'
 
 export const drizzleAccountAdapter = Layer.succeed(AccountRepository, {
   save: (account: Account) =>

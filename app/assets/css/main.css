@@ -2,7 +2,8 @@
 @import "@nuxt/ui";
 
 @theme {
-  --font-sans: 'Inter', sans-serif;
+  --font-sans: 'Inter', 'Vazirmatn', sans-serif;
+  --font-vazirmatn: 'Vazirmatn', sans-serif;
 }
 
 @theme static {

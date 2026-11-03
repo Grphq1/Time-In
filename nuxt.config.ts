@@ -40,4 +40,11 @@ export default defineNuxtConfig({
       stylistic: true,
     },
   },
+
+  fonts: {
+    families: [
+      { name: 'Inter', fallbacks: [] },
+      { name: 'Vazirmatn' },
+    ],
+  },
 })

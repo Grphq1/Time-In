@@ -16,6 +16,13 @@ export default defineNuxtConfig({
   },
 
   css: ['~/assets/css/main.css'],
+
+  runtimeConfig: {
+    session: {
+      password: '',
+      maxAge: 60 * 60 * 24 * 30,
+    },
+  },
   compatibilityDate: '2025-07-15',
 
   nitro: {

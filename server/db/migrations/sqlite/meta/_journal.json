@@ -8,6 +8,13 @@
       "when": 1791369868290,
       "tag": "0000_redundant_mysterio",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1793770508000,
+      "tag": "0001_nervous_lorna_dane",
+      "breakpoints": true
     }
   ]
 }

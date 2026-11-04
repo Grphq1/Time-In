@@ -7,6 +7,9 @@ export const users = sqliteTable(
     name: text('name').notNull(),
     email: text('email'),
     avatarUrl: text('avatar_url'),
+    visibility: text('visibility', {
+      enum: ['public', 'friends', 'private'],
+    }).notNull().default('public'),
     createdAt: integer('created_at', { mode: 'timestamp_ms' }).notNull(),
   },
   table => [

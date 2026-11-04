@@ -35,6 +35,15 @@ export default defineNuxtConfig({
     db: 'sqlite',
   },
 
+  vite: {
+    optimizeDeps: {
+      include: [
+        '@inspira-ui/plugins',
+        '@vue/devtools-core',
+      ],
+    },
+  },
+
   eslint: {
     config: {
       stylistic: true,

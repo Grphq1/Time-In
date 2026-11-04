@@ -1,5 +1,6 @@
+import type { User } from '#server/features/auth/domain/user'
 import { runEffect } from '#server/shared/runtime/http'
-import { handleOAuthLogin } from '#server/features/auth/application/handle-oauth-login'
+import { handleOAuthLogin } from '~~/server/features/auth/application/handle-oauth-login'
 
 export default defineOAuthGoogleEventHandler({
   config: {
@@ -7,8 +8,10 @@ export default defineOAuthGoogleEventHandler({
   },
   async onSuccess(event, { user }) {
     const session = await getUserSession(event)
-    const currentUserId = session.id
-    let domainUser
+    const currentUserId = session.user?.id ?? null
+
+    let domainUser: User
+
     try {
       domainUser = await runEffect(
         handleOAuthLogin({
@@ -26,8 +29,9 @@ export default defineOAuthGoogleEventHandler({
     }
     catch (error) {
       const code = (error as { data?: { code?: string } }).data?.code ?? 'auth-failed'
-      return sendRedirect(event, `/login?error=${code}`)
+      return sendRedirect(event, `/auth?error=${code}`)
     }
+
     await setUserSession(event, {
       user: {
         id: domainUser.id,
@@ -36,10 +40,11 @@ export default defineOAuthGoogleEventHandler({
         avatarUrl: domainUser.avatarUrl,
       },
     })
+
     return sendRedirect(event, '/')
   },
   onError(event, error) {
     console.error('Google OAuth error:', error)
-    return sendRedirect(event, '/login?error=google')
+    return sendRedirect(event, '/auth?error=google')
   },
 })

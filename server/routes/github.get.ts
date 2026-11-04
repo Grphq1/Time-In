@@ -1,13 +1,14 @@
+import type { User } from '#server/features/auth/domain/user'
 import { runEffect } from '#server/shared/runtime/http'
-import { handleOAuthLogin } from '#server/features/auth/application/handle-oauth-login'
+import { handleOAuthLogin } from '~~/server/features/auth/application/handle-oauth-login'
 
 export default defineOAuthGitHubEventHandler({
   config: { emailRequired: true },
   async onSuccess(event, { user }) {
     const session = await getUserSession(event)
-    const currentUserId = session.id
+    const currentUserId = session.user?.id ?? null
 
-    let domainUser
+    let domainUser: User
 
     try {
       domainUser = await runEffect(
@@ -26,7 +27,7 @@ export default defineOAuthGitHubEventHandler({
     }
     catch (error) {
       const code = (error as { data?: { code?: string } }).data?.code ?? 'auth-failed'
-      return sendRedirect(event, `/login?error=${code}`)
+      return sendRedirect(event, `/auth?error=${code}`)
     }
 
     await setUserSession(event, {
@@ -42,6 +43,6 @@ export default defineOAuthGitHubEventHandler({
   },
   onError(event, error) {
     console.error('GitHub OAuth error:', error)
-    return sendRedirect(event, '/login?error=github')
+    return sendRedirect(event, '/auth?error=github')
   },
 })

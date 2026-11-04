@@ -1,7 +1,14 @@
 <script setup lang="ts">
 import type { ButtonProps } from '@nuxt/ui'
 
+definePageMeta({
+  layout: false,
+})
+
 const url = useRequestURL()
+
+const appConfig = useAppConfig()
+const logo = appConfig.logoInText
 
 const providers = ref<ButtonProps[]>([
   {
@@ -10,6 +17,7 @@ const providers = ref<ButtonProps[]>([
     to: `${url.origin}/auth/google`,
     color: 'neutral',
     variant: 'outline',
+    external: true,
     size: 'xl',
     block: true,
   },
@@ -17,6 +25,7 @@ const providers = ref<ButtonProps[]>([
     label: 'Continue with GitHub',
     icon: 'i-simple-icons-github',
     to: `${url.origin}/auth/github`,
+    external: true,
     color: 'neutral',
     variant: 'outline',
     size: 'xl',
@@ -59,13 +68,25 @@ const providers = ref<ButtonProps[]>([
       />
 
       <div class="relative z-10 w-full max-w-sm">
+        <ULink
+          to="/"
+          aria-label="Time In home"
+          class="mb-10 flex w-fit items-center gap-2"
+        >
+          <span
+            class="inline-flex items-center justify-center rounded-xl bg-inverted px-2.5 py-1.5 text-lg leading-none text-inverted shadow-sm ring-1 ring-default transition-transform hover:scale-105 sm:text-xl"
+          >
+            {{ logo }}
+          </span>
+        </ULink>
+
         <div class="mb-8">
           <h2 class="text-3xl font-semibold tracking-tight">
             Welcome back
           </h2>
 
           <p class="mt-2 text-muted">
-            Sign in to continue to your account.
+            Sign in to continue to your account
           </p>
         </div>
 
@@ -84,7 +105,7 @@ const providers = ref<ButtonProps[]>([
             class="font-medium text-primary"
           >
             Privacy Policy
-          </ULink>.
+          </ULink>
         </p>
       </div>
     </section>

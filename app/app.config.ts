@@ -2,6 +2,7 @@ export default defineAppConfig({
   title: 'Time In',
   description: 'Time In is a shared space for focused work. Gather with others, sync your time, and stay in the flow with the focus method that works best for you.',
   logoInText: 'φ(．．)',
+  githubUrl: 'https://github.com/Grphq1/Time-In',
   ui: {
     colors: {
       primary: 'clay',

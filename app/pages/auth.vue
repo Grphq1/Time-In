@@ -3,12 +3,46 @@ import type { ButtonProps } from '@nuxt/ui'
 
 definePageMeta({
   layout: false,
+  middleware: [
+    function () {
+      const { loggedIn } = useUserSession()
+
+      if (loggedIn.value) {
+        return navigateTo('/')
+      }
+    },
+  ],
+})
+
+useSeoMeta({
+  title: 'Sign in',
+  description: 'Sign in to Time In with Google or GitHub to focus together.',
+  robots: 'noindex, nofollow',
 })
 
 const url = useRequestURL()
+const route = useRoute()
 
 const appConfig = useAppConfig()
 const logo = appConfig.logoInText
+
+const OAUTH_ERROR_MESSAGES: Record<string, string> = {
+  'account-linked': 'This account is already linked to another user.',
+  'email-in-use': 'An account with this email already exists. Sign in with your other provider.',
+  'email-required': 'Your provider did not share an email address. Use another sign-in method.',
+  'session-failed': 'We could not save your session. Please try again.',
+  'session-missing': 'Your session is no longer valid. Please sign in again.',
+  'github': 'GitHub sign in failed. Please try again.',
+  'google': 'Google sign in failed. Please try again.',
+}
+
+const authError = computed(() => {
+  const code = route.query.error
+
+  if (typeof code !== 'string' || !code) return null
+
+  return OAUTH_ERROR_MESSAGES[code] ?? 'We could not sign you in. Please try again.'
+})
 
 const providers = ref<ButtonProps[]>([
   {
@@ -89,6 +123,16 @@ const providers = ref<ButtonProps[]>([
             Sign in to continue to your account
           </p>
         </div>
+
+        <UAlert
+          v-if="authError"
+          color="error"
+          variant="subtle"
+          icon="i-lucide-circle-alert"
+          title="Could not sign in"
+          :description="authError"
+          class="mb-6"
+        />
 
         <div class="space-y-3">
           <UButton

@@ -7,10 +7,15 @@ export default defineNuxtConfig({
     '@nuxthub/core',
     '@vueuse/nuxt',
     'nuxt-auth-utils',
+    '@nuxt/content',
   ],
   devtools: { enabled: true },
   app: {
     head: {
+      title: 'Time In',
+      htmlAttrs: {
+        lang: 'en',
+      },
       link: [{ rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' }],
     },
   },
@@ -32,7 +37,9 @@ export default defineNuxtConfig({
   },
 
   hub: {
+    blob: true,
     db: 'sqlite',
+    dir: process.env.VITEST ? '.data-test' : '.data',
   },
 
   vite: {
@@ -40,6 +47,7 @@ export default defineNuxtConfig({
       include: [
         '@inspira-ui/plugins',
         '@vue/devtools-core',
+        'zod',
       ],
     },
   },

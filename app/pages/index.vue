@@ -12,9 +12,13 @@ definePageMeta({
 })
 
 useSeoMeta({
-  title: 'Time In — Focus together',
+  title: 'Focus together',
   description:
     'A simple, open-source space to focus together with synced timers, signals, friends, and focus analytics.',
+  ogTitle: 'Focus together',
+  ogDescription:
+    'A simple, open-source space to focus together with synced timers, signals, friends, and focus analytics.',
+  twitterCard: 'summary',
 })
 
 const appConfig = useAppConfig()

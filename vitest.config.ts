@@ -17,6 +17,7 @@ export default defineConfig({
           name: 'nuxt',
           include: ['test/nuxt/*.{test,spec}.ts'],
           environment: 'nuxt',
+          fileParallelism: false, // we disable parallelism because the database is shared between tests
           environmentOptions: {
             nuxt: {
               rootDir: fileURLToPath(new URL('.', import.meta.url)),

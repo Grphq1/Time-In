@@ -17,7 +17,7 @@
 
 | Target    | Theme                                    | Status  |
 |-----------|------------------------------------------|---------|
-| `v0.1.0`  | Auth & Profile foundation & index page                | In progress |
+| `v0.1.0`  | Auth & Profile foundation & index page                | Shipped |
 | `v0.2.0`  | Core session management                  | Planned |
 | `v0.3.0`  | Realtime foundation (WebSocket, presence)| Planned |
 | `v0.4.0`  | Commands & voting                        | Planned |
@@ -37,8 +37,8 @@
 ### User Profile & Auth — `v0.1.0`
 - [x] OAuth login (Google & GitHub)
 - [x] Landing page
-- [~] Profile management (name, avatar, visibility)
-- [ ] Avatar upload
+- [x] Profile management (name, avatar, visibility)
+- [x] Avatar upload
 - [x] Session-based auth with protected routes
 
 ### Core Session Management — `v0.2.0`

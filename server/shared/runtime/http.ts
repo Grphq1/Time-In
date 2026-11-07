@@ -1,19 +1,5 @@
-import { Data, Effect } from 'effect'
-import type {
-  AccountLinkedToAnotherUserError,
-  RepositoryError,
-  UserNotFoundError,
-} from '~~/server/features/auth/domain/errors'
-
-type AppError
-  = | AccountLinkedToAnotherUserError
-    | RepositoryError
-    | UserNotFoundError
-
-export interface EffectRuntime {
-  runPromise: <A, E, R>(effect: Effect.Effect<A, E, R>) => Promise<A>
-  dispose: () => void | Promise<void>
-}
+import { Data, Effect, type ManagedRuntime } from 'effect'
+import { createError } from 'h3'
 
 export class HttpError extends Data.TaggedError('HttpError')<{
   readonly statusCode: number
@@ -28,41 +14,24 @@ const toHttpError = (error: HttpError) =>
     data: { code: error.code },
   })
 
-export const runEffect = async <A, R>(
-  program: Effect.Effect<A, AppError, R>,
-  runtime: EffectRuntime,
+const internalError = () =>
+  new HttpError({
+    statusCode: 500,
+    code: 'internal-error',
+    message: 'An unexpected error occurred. Please try again.',
+  })
+
+export const runEffect = async <A, E, R>(
+  program: Effect.Effect<A, E, R>,
+  runtime: ManagedRuntime.ManagedRuntime<R, never>,
+  mapError: (error: E) => Effect.Effect<never, HttpError>,
 ) =>
   runtime.runPromise(
     program.pipe(
-      Effect.catchTags({
-        AccountLinkedToAnotherUserError: error =>
-          Effect.fail(new HttpError({
-            statusCode: 409,
-            code: 'account-linked',
-            message: `This GitHub account is already linked to user ${error.userId}.`,
-          })),
-        UserNotFoundError: () =>
-          Effect.fail(new HttpError({
-            statusCode: 401,
-            code: 'session-missing',
-            message: 'Your session is no longer valid. Please sign in again.',
-          })),
-        RepositoryError: error =>
-          Effect.logError('[RepositoryError]', error.cause).pipe(
-            Effect.andThen(Effect.fail(new HttpError({
-              statusCode: 500,
-              code: 'auth-failed',
-              message: 'We could not complete your sign in.',
-            }))),
-          ),
-      }),
+      Effect.catch(mapError),
       Effect.catchDefect(defect =>
         Effect.logError('[Defect]', defect).pipe(
-          Effect.andThen(Effect.fail(new HttpError({
-            statusCode: 500,
-            code: 'auth-failed',
-            message: 'Unexpected error while signing in.',
-          }))),
+          Effect.andThen(Effect.fail(internalError())),
         ),
       ),
     ),
@@ -71,9 +40,5 @@ export const runEffect = async <A, R>(
       throw toHttpError(error)
     }
 
-    throw createError({
-      statusCode: 500,
-      statusMessage: 'Unexpected error while signing in.',
-      data: { code: 'auth-failed' },
-    })
+    throw toHttpError(internalError())
   })

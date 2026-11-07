@@ -15,6 +15,13 @@
       "when": 1793770508000,
       "tag": "0001_nervous_lorna_dane",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1793971328838,
+      "tag": "0002_natural_jackal",
+      "breakpoints": true
     }
   ]
 }

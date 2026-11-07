@@ -5,7 +5,7 @@ export const users = sqliteTable(
   {
     id: text('id').primaryKey(),
     name: text('name').notNull(),
-    email: text('email'),
+    email: text('email').notNull(),
     avatarUrl: text('avatar_url'),
     visibility: text('visibility', {
       enum: ['public', 'friends', 'private'],

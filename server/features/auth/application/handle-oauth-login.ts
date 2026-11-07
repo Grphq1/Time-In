@@ -1,7 +1,7 @@
 import { DateTime, Effect } from 'effect'
 import type { Provider } from '../domain/account'
 import { AccountRepository } from '../domain/account.port'
-import { AccountLinkedToAnotherUserError } from '../domain/errors'
+import { AccountLinkedToAnotherUserError, EmailAlreadyRegisteredError, ProviderEmailMissingError } from '../domain/errors'
 import type { User } from '../domain/user'
 import { UserRepository } from '../domain/user.port'
 
@@ -9,7 +9,7 @@ interface OAuthLoginInput {
   provider: Provider
   providerAccountId: string
   name: string
-  email: string | null
+  email: string
   avatarUrl: string | null
 }
 
@@ -22,6 +22,11 @@ export const handleOAuthLogin = (input: {
     const accounts = yield* AccountRepository
     const now = yield* DateTime.nowAsDate
     const { profile, currentUserId } = input
+    const email = profile.email.trim().toLowerCase()
+
+    if (!email) {
+      return yield* Effect.fail(new ProviderEmailMissingError({ provider: profile.provider }))
+    }
 
     yield* Effect.logInfo('Handling OAuth login', {
       provider: profile.provider,
@@ -64,6 +69,17 @@ export const handleOAuthLogin = (input: {
       user = yield* users.findById(currentUserId)
     }
     else {
+      const existingByEmail = yield* users.findByEmail(email)
+
+      if (existingByEmail) {
+        return yield* Effect.fail(
+          new EmailAlreadyRegisteredError({
+            email,
+            provider: profile.provider,
+          }),
+        )
+      }
+
       yield* Effect.logInfo('Creating user for OAuth login', {
         provider: profile.provider,
         providerAccountId: profile.providerAccountId,
@@ -72,8 +88,9 @@ export const handleOAuthLogin = (input: {
       user = {
         id: crypto.randomUUID(),
         name: profile.name,
-        email: profile.email ?? '',
+        email,
         avatarUrl: profile.avatarUrl,
+        visibility: 'public',
         createdAt: now,
       }
       yield* users.save(user)

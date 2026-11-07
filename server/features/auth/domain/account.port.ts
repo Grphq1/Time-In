@@ -1,7 +1,7 @@
 import type { Effect } from 'effect'
 import { Context } from 'effect'
-import type { RepositoryError } from './errors'
 import type { Account, Provider } from './account'
+import type { RepositoryError } from '#server/shared/types'
 
 export class AccountRepository extends Context.Service<
   AccountRepository,

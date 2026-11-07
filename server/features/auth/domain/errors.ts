@@ -1,4 +1,5 @@
 import { Data } from 'effect'
+import type { Provider } from './account'
 
 export class AccountLinkedToAnotherUserError extends Data.TaggedClass('AccountLinkedToAnotherUserError')<{
   readonly accountId: string
@@ -6,8 +7,13 @@ export class AccountLinkedToAnotherUserError extends Data.TaggedClass('AccountLi
   readonly provider: string
 }> {}
 
-export class RepositoryError extends Data.TaggedError('RepositoryError')<{
-  readonly cause: unknown
+export class EmailAlreadyRegisteredError extends Data.TaggedError('EmailAlreadyRegisteredError')<{
+  readonly email: string
+  readonly provider: Provider
+}> {}
+
+export class ProviderEmailMissingError extends Data.TaggedError('ProviderEmailMissingError')<{
+  readonly provider: Provider
 }> {}
 
 export class UserNotFoundError extends Data.TaggedError('UserNotFoundError')<{

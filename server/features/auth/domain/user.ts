@@ -1,7 +1,10 @@
+import type { ProfileVisibility } from '#shared/schemas/profile'
+
 export interface User {
   readonly id: string
   readonly name: string
   readonly email: string
   readonly avatarUrl: string | null
+  readonly visibility: ProfileVisibility
   readonly createdAt: Date
 }

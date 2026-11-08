@@ -1,7 +1,8 @@
 import { completeOAuthLogin } from '#server/features/auth/infrastructure/oauth-callback'
+import { withOAuthErrorRedirect } from '#server/features/auth/infrastructure/oauth-route'
 import { logError } from '#server/shared/runtime/log'
 
-export default defineOAuthGoogleEventHandler({
+export default withOAuthErrorRedirect('google', defineOAuthGoogleEventHandler({
   config: {
     scope: ['email', 'profile'],
   },
@@ -18,4 +19,4 @@ export default defineOAuthGoogleEventHandler({
     await logError('Google OAuth error', error)
     return sendRedirect(event, '/auth?error=google')
   },
-})
+}))

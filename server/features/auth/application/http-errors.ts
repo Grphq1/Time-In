@@ -1,4 +1,5 @@
 import { Effect } from 'effect'
+import { serializeForLog } from '#server/utils/logger'
 import { HttpError } from '../../../shared/runtime/http'
 import type { RepositoryError } from '../../../shared/types'
 import type {
@@ -18,7 +19,9 @@ export type AuthError
 export type ProfileError = RepositoryError | UserNotFoundError
 
 const logRepositoryFailure = (message: string, error: RepositoryError) =>
-  Effect.logError(message, error.cause)
+  Effect.logError(message).pipe(
+    Effect.annotateLogs({ error: serializeForLog(error.cause) }),
+  )
 
 export const mapAuthError = (error: AuthError): Effect.Effect<never, HttpError> => {
   switch (error._tag) {

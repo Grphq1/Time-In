@@ -1,7 +1,7 @@
 import type { H3Event } from 'h3'
 import { sendRedirect } from 'h3'
 import { logError } from '#server/shared/runtime/log'
-import { runEffect } from '#server/shared/runtime/http'
+import { runEffect, requestLogContext } from '#server/shared/runtime/http'
 import { handleOAuthLogin } from '../application/handle-oauth-login'
 import { mapAuthError } from '../application/http-errors'
 import { toSessionUser } from '../application/session-user'
@@ -43,6 +43,7 @@ export async function completeOAuthLogin(
       }),
       event.context.effectRuntime,
       mapAuthError,
+      requestLogContext(event),
     )
 
     try {

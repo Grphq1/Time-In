@@ -1,4 +1,5 @@
-import { Effect } from 'effect'
+import { serverLogger } from '#server/utils/logger'
 
-export const logError = (message: string, cause?: unknown) =>
-  Effect.runPromise(Effect.logError(message, cause))
+export async function logError(message: string, cause?: unknown) {
+  serverLogger().error(message, { error: cause })
+}

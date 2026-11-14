@@ -1,5 +1,6 @@
 import type { Effect } from 'effect'
 import { Context } from 'effect'
+import type { Account } from './account'
 import type { UserNotFoundError } from './errors'
 import type { User } from './user'
 import type { RepositoryError } from '#server/shared/types'
@@ -7,7 +8,11 @@ import type { RepositoryError } from '#server/shared/types'
 export class UserRepository extends Context.Service<
   UserRepository,
   {
-    readonly save: (user: User) => Effect.Effect<void, RepositoryError>
+    /** Creates the user and its first OAuth account in one transaction. */
+    readonly createWithAccount: (
+      user: User,
+      account: Account,
+    ) => Effect.Effect<void, RepositoryError>
 
     readonly update: (user: User) => Effect.Effect<void, RepositoryError>
 

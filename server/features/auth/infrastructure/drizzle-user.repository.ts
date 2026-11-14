@@ -1,6 +1,7 @@
 import { and, eq, ne, sql } from 'drizzle-orm'
 import { Effect, Layer } from 'effect'
 import { db, schema } from '@nuxthub/db'
+import type { Account } from '../domain/account'
 import { UserNotFoundError } from '../domain/errors'
 import type { User } from '../domain/user'
 import { UserRepository } from '../domain/user.port'
@@ -20,8 +21,13 @@ function dbUserToDomain(
 }
 
 export const drizzleUserAdapter = Layer.succeed(UserRepository, {
-  save: (user: User) =>
-    tryDb(() => db.insert(schema.users).values(user).run()),
+  createWithAccount: (user: User, account: Account) =>
+    tryDb(() =>
+      db.batch([
+        db.insert(schema.users).values(user),
+        db.insert(schema.accounts).values(account),
+      ]),
+    ),
 
   update: (user: User) =>
     tryDb(() =>

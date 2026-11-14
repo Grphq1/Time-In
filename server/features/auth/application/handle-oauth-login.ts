@@ -64,6 +64,7 @@ export const handleOAuthLogin = (input: {
     }
 
     let user: User
+    let newUser = false
 
     if (currentUserId) {
       user = yield* users.findById(currentUserId)
@@ -93,16 +94,24 @@ export const handleOAuthLogin = (input: {
         visibility: 'public',
         createdAt: now,
       }
-      yield* users.save(user)
+      newUser = true
     }
 
-    yield* accounts.save({
+    const account = {
       id: crypto.randomUUID(),
       userId: user.id,
       provider: profile.provider,
       providerAccountId: profile.providerAccountId,
       createdAt: now,
-    })
+    }
+
+    if (newUser) {
+      // One transaction, so a failure cannot strand a user without their account.
+      yield* users.createWithAccount(user, account)
+    }
+    else {
+      yield* accounts.save(account)
+    }
 
     yield* Effect.logInfo('OAuth login completed', { userId: user.id })
     return user

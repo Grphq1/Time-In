@@ -6,7 +6,7 @@ import { toSessionUser } from '#server/features/auth/application/session-user'
 import { updateProfile } from '#server/features/auth/application/update-profile'
 import { detectImageType, type AvatarMime } from '#server/shared/image'
 import { logError } from '#server/shared/runtime/log'
-import { runEffect } from '~~/server/shared/runtime/http'
+import { runEffect, requestLogContext } from '~~/server/shared/runtime/http'
 
 const AVATAR_TYPES: AvatarMime[] = [
   'image/jpeg',
@@ -70,6 +70,7 @@ export default defineEventHandler(async (event) => {
     getProfile(session.user.id),
     event.context.effectRuntime,
     mapProfileError,
+    requestLogContext(event),
   )
 
   let uploaded: Awaited<ReturnType<typeof blob.put>>
@@ -96,7 +97,15 @@ export default defineEventHandler(async (event) => {
     }),
     event.context.effectRuntime,
     mapProfileError,
-  )
+    requestLogContext(event),
+  ).catch(async (cause) => {
+    // The row never referenced this file yet, so remove it instead of orphaning it.
+    await blob.del(uploaded.pathname).catch(delCause =>
+      logError('[AvatarUpload] Failed to clean up orphaned avatar', delCause),
+    )
+
+    throw cause
+  })
 
   await setUserSession(event, {
     user: toSessionUser(user),

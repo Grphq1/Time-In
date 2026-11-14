@@ -1,6 +1,6 @@
 import { mapProfileError } from '#server/features/auth/application/http-errors'
 import { getProfile } from '#server/features/auth/application/get-profile'
-import { runEffect } from '~~/server/shared/runtime/http'
+import { runEffect, requestLogContext } from '~~/server/shared/runtime/http'
 
 export default defineEventHandler(async (event) => {
   const session = await requireUserSession(event)
@@ -9,5 +9,6 @@ export default defineEventHandler(async (event) => {
     getProfile(session.user.id),
     event.context.effectRuntime,
     mapProfileError,
+    requestLogContext(event),
   )
 })

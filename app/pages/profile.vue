@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import type { ProfileVisibility } from '#shared/schemas/profile'
 import { avatarFileSchema, updateProfileSchema } from '#shared/schemas/profile'
-import { notifyError } from '~/utils/api'
 import { logger } from '~/utils/logger'
 
 definePageMeta({
@@ -16,6 +15,7 @@ useSeoMeta({
 })
 
 const toast = useToast()
+const { notify } = useErrorHandler()
 
 const {
   data: profile,
@@ -90,7 +90,7 @@ async function handleAvatarFile(file: File | null) {
     })
   }
   catch (cause) {
-    notifyError(toast, 'Could not upload avatar', cause)
+    notify(cause, { title: 'Could not upload avatar' })
   }
 }
 
@@ -147,7 +147,7 @@ async function saveProfile() {
     })
   }
   catch (cause) {
-    notifyError(toast, 'Could not update profile', cause)
+    notify(cause, { title: 'Could not update profile' })
   }
 }
 </script>
@@ -199,19 +199,11 @@ async function saveProfile() {
         </UCard>
       </div>
 
-      <UAlert
+      <AppDataState
         v-else-if="error"
-        color="error"
-        variant="subtle"
-        icon="i-lucide-circle-alert"
-        title="We could not load your profile."
-        :actions="[{
-          label: 'Try again',
-          icon: 'i-lucide-refresh-cw',
-          color: 'error',
-          variant: 'soft',
-          onClick: () => refresh(),
-        }]"
+        status="error"
+        :error="error"
+        @retry="refresh()"
       />
 
       <div

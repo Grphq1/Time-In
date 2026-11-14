@@ -44,7 +44,7 @@ const authError = computed(() => {
   return OAUTH_ERROR_MESSAGES[code] ?? 'We could not sign you in. Please try again.'
 })
 
-const providers = ref<ButtonProps[]>([
+const providers: ButtonProps[] = [
   {
     label: 'Continue with Google',
     icon: 'i-simple-icons-google',
@@ -65,7 +65,7 @@ const providers = ref<ButtonProps[]>([
     size: 'xl',
     block: true,
   },
-])
+]
 </script>
 
 <template>

@@ -3,7 +3,6 @@ declare module '#auth-utils' {
     id: string
     email: string
     name: string
-    avatar?: string | null
     avatarUrl?: string | null
     visibility?: 'public' | 'friends' | 'private'
   }

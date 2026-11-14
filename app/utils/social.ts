@@ -1,22 +1,5 @@
 import type { ProfileVisibility } from '#shared/schemas/profile'
 
-export function formatSocialDate(value: string | Date): string {
-  return new Intl.DateTimeFormat(undefined, {
-    dateStyle: 'medium',
-  }).format(new Date(value))
-}
-
-export function formatFocusDuration(seconds: number): string {
-  const minutes = Math.round(seconds / 60)
-
-  if (minutes < 60) return `${minutes} min`
-
-  const hours = Math.floor(minutes / 60)
-  const remainder = minutes % 60
-
-  return remainder ? `${hours}h ${remainder}m` : `${hours}h`
-}
-
 export function visibilityLabel(visibility: ProfileVisibility): string {
   switch (visibility) {
     case 'public':

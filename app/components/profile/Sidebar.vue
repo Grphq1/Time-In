@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import type { ProfileVisibility } from '#shared/schemas/profile'
 import type { UserProfile } from '~/utils/profile'
-import { notifyError } from '~/utils/api'
 import { formatProfileJoinedAt } from '~/utils/profile'
 import { visibilityLabel } from '~/utils/social'
 
@@ -12,6 +11,7 @@ const props = defineProps<{
 }>()
 
 const toast = useToast()
+const { notify } = useErrorHandler()
 
 const joinedAt = computed(() => formatProfileJoinedAt(props.profile.createdAt))
 
@@ -36,7 +36,7 @@ async function copyUserId() {
     await copy(props.profile.id)
   }
   catch (cause) {
-    notifyError(toast, 'Could not copy user ID', cause)
+    notify(cause, { title: 'Could not copy user ID' })
   }
 }
 </script>

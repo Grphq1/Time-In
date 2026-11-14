@@ -4,13 +4,14 @@ import { reviveUserProfile } from '~/utils/profile'
 
 export const useUpdateProfile = () => {
   const pending = ref(false)
+  const api = useApi()
   const { fetch: refreshSession } = useUserSession()
 
   const update = async (input: UpdateProfileSchema): Promise<UserProfile> => {
     pending.value = true
 
     try {
-      const profile = await $fetch<UserProfile>('/api/profile', {
+      const profile = await api<UserProfile>('/api/profile', {
         method: 'PATCH',
         body: input,
       })
